@@ -1,4 +1,5 @@
 #!/bin/bash
+#
 # This will generate the spec, and run catalyst.
 # I don't know if catalyst spec files can read vars, and didn't try it.
 # Oh well, doesn't really matter, I suppose
