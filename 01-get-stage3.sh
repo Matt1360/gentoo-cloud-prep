@@ -6,7 +6,7 @@
 ##
 ## Vars
 ##
-MIRROR="https://lug.mtu.edu"
+MIRROR="http://mirror.reenigne.net"
 OUTDIR="/var/tmp/catalyst/builds"
 
 mkdir -p ${OUTDIR}
