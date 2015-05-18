@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
 # This will generate the spec, and run catalyst.
 # I don't know if catalyst spec files can read vars, and didn't try it.
@@ -11,18 +11,21 @@
 ##
 ## Vars
 ##
-DATE=`date +%Y%m%d`
-SPECFILE=stage4.spec
-OUTFILE=/image-prep/gentoo/stage4-${DATE}.tar.bz2
+DATE=$(date +%Y%m%d)
+SPECFILE=~/tmp/catalyst/stage4.spec
+OUTDIR=~/tmp/catalyst/gentoo
+OUTFILE="${OUTDIR}/stage4-${DATE}.tar.bz2"
+
+mkdir -p "${OUTDIR}"
 
 # Build the spec file, first
-cat > $SPECFILE << EOF
+cat > "${SPECFILE}" << EOF
 subarch: amd64
 target: stage4
 rel_type: default
 profile: default/linux/amd64/13.0
 source_subpath: stage3-amd64-latest
-cflags: -O2 -pipe -march=native
+cflags: -O2 -pipe -march=core2
 
 pkgcache_path: /tmp/packages
 kerncache_path: /tmp/kernel
@@ -46,10 +49,10 @@ boot/kernel/gentoo/gk_kernargs: --all-ramdisk-modules
 EOF
 
 # Run catalyst
-catalyst -f $SPECFILE
+catalyst -f "${SPECFILE}"
 
 # Clean up the spec file
-rm $SPECFILE
+rm "${SPECFILE}"
 
 # Move the outputted image
-mv /var/tmp/catalyst/builds/default/stage4-amd64-${DATE}.tar.bz2 $OUTFILE
+mv "/var/tmp/catalyst/builds/default/stage4-amd64-${DATE}.tar.bz2" "${OUTFILE}"
