@@ -6,7 +6,7 @@
 ##
 ## Vars
 ##
-MIRROR="http://mirror.reenigne.net"
+MIRROR="http://gentoo.osuosl.org"
 OUTDIR="/var/tmp/catalyst/builds"
 
 mkdir -p ${OUTDIR}
@@ -16,33 +16,35 @@ mkdir -p ${OUTDIR}
 ##
 
 STAGE3_NAME="stage3-amd64-latest.tar.bz2"
-STAGE3_FILE=$(curl -s "${MIRROR}/gentoo/releases/amd64/autobuilds/latest-stage3-amd64.txt" | awk '/stage3/ { print $1 }')
-LIVE_SHA512=$(curl -s "${MIRROR}/gentoo/releases/amd64/autobuilds/${STAGE3_FILE}.DIGESTS" | awk '/SHA512 HASH/{getline;print}' | grep -iv 'contents' | awk {'print $1'})
-OUR_SHA512=$(sha512sum "${OUTDIR}/${STAGE3_NAME}" | awk {'print $1'})
+STAGE3_REAL_PATH="$(curl -s "${MIRROR}/releases/amd64/autobuilds/latest-stage3-amd64.txt" | awk '/stage3/ { print $1 }')"
+STAGE3_REAL_NAME="$(echo -n ${STAGE3_REAL_PATH} | awk -F/ '{ print $2}')"
+STAGE3_URL="${MIRROR}/releases/amd64/autobuilds/current-stage3-amd64/${STAGE3_REAL_NAME}"
 
-# download latest stage3 if not the newest
-if [ "${LIVE_SHA512}" != "${OUR_SHA512}" ]
-then
-	echo "Downloading new image - ${STAGE3_NAME}"
-	curl -s "${MIRROR}/gentoo/releases/amd64/autobuilds/${STAGE3_FILE}" > "${OUTDIR}/${STAGE3_NAME}"
-else
-	echo "${STAGE3_NAME} is up to date, skipping"
-fi
+echo "Downloading new image - ${STAGE3_NAME}"
+curl -s "${STAGE3_URL}" -o "${OUTDIR}/${STAGE3_REAL_NAME}"
+curl -s "${STAGE3_URL}.CONTENTS" -o "${OUTDIR}/${STAGE3_REAL_NAME}.CONTENTS"
+curl -s "${STAGE3_URL}.DIGESTS.asc" -o "${OUTDIR}/${STAGE3_REAL_NAME}.DIGESTS.asc"
 
 # make sure latest stage3 is actually good
-OUR_SHA512=$(sha512sum "${OUTDIR}/${STAGE3_NAME}" | awk {'print $1'})
-if [ "${OUR_SHA512}" != "${OUR_SHA512}" ]; then
-  echo 'downloaded file did not match the sha512 sum'
+gkeys verify -F "${OUTDIR}/${STAGE3_REAL_NAME}.DIGESTS.asc"
+if [[ $? != 0 ]]; then
+  echo 'stage3 did not verify, removing badness'
+  rm "${OUTDIR}/${STAGE3_REAL_NAME}"
+  rm "${OUTDIR}/${STAGE3_REAL_NAME}.DIGESTS"
   exit 1
+else
+  rm "${OUTDIR}/${STAGE3_NAME}"
+  rm "${OUTDIR}/${STAGE3_REAL_NAME}.DIGESTS"
+  mv "${OUTDIR}/${STAGE3_REAL_NAME}" "${OUTDIR}/${STAGE3_NAME}"
 fi
 
 # get the latest portage
 PORTAGE_DIR="/var/tmp/catalyst/snapshots"
-PORTAGE_LIVE_MD5=$(curl -s "${MIRROR}/gentoo/snapshots/portage-latest.tar.bz2.md5sum" | awk '/portage-latest/ {print $1}')
+PORTAGE_LIVE_MD5=$(curl -s "${MIRROR}/snapshots/portage-latest.tar.bz2.md5sum" | awk '/portage-latest/ {print $1}')
 OUR_MD5=$(md5sum "${PORTAGE_DIR}/portage-latest.tar.bz2" | awk {'print $1'})
 if [[ "${PORTAGE_LIVE_MD5}" != "${OUR_MD5}" ]]; then
   echo 'downloading new portage tarball'
-  curl -s "${MIRROR}/gentoo/snapshots/portage-latest.tar.bz2" > "${PORTAGE_DIR}/portage-latest.tar.bz2"
+  curl -s "${MIRROR}/snapshots/portage-latest.tar.bz2" > "${PORTAGE_DIR}/portage-latest.tar.bz2"
 else
   echo 'portage tarball is up to date'
 fi
