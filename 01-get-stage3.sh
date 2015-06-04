@@ -16,13 +16,12 @@ mkdir -p ${OUTDIR}
 ##
 
 STAGE3_NAME="stage3-amd64-latest.tar.bz2"
-STAGE3_REAL_PATH="$(curl -s "${MIRROR}/releases/amd64/autobuilds/latest-stage3-amd64.txt" | awk '/stage3/ { print $1 }')"
-STAGE3_REAL_NAME="$(echo -n ${STAGE3_REAL_PATH} | awk -F/ '{ print $2}')"
+STAGE3_REAL_PATH=$(curl -s "${MIRROR}/releases/amd64/autobuilds/latest-stage3-amd64.txt" | awk '/stage3/ { print $1 }')
+STAGE3_REAL_NAME=$(echo -n "${STAGE3_REAL_PATH}" | awk -F/ '{ print $2}')
 STAGE3_URL="${MIRROR}/releases/amd64/autobuilds/current-stage3-amd64/${STAGE3_REAL_NAME}"
 
 echo "Downloading new image - ${STAGE3_NAME}"
 curl -s "${STAGE3_URL}" -o "${OUTDIR}/${STAGE3_REAL_NAME}"
-curl -s "${STAGE3_URL}.CONTENTS" -o "${OUTDIR}/${STAGE3_REAL_NAME}.CONTENTS"
 curl -s "${STAGE3_URL}.DIGESTS.asc" -o "${OUTDIR}/${STAGE3_REAL_NAME}.DIGESTS.asc"
 
 # make sure latest stage3 is actually good
@@ -33,6 +32,15 @@ if [[ $? != 0 ]]; then
   rm "${OUTDIR}/${STAGE3_REAL_NAME}.DIGESTS"
   exit 1
 else
+  SHA512=$(grep -A1 SHA512 "${OUTDIR}/${STAGE3_REAL_NAME}.DIGESTS.asc" | grep stage3 | grep -v CONTENTS | awk '{ print $1 }')
+  SHA512_REAL=$(sha512sum "${OUTDIR}/${STAGE3_REAL_NAME}" | awk '{ print $1 }')
+  if [[ SHA512 != SHA512_REAL ]]; then
+    echo 'shasum did not match, removing badness'
+    rm "${OUTDIR}/${STAGE3_REAL_NAME}"
+    rm "${OUTDIR}/${STAGE3_REAL_NAME}.DIGESTS.asc"
+    exit 1
+  fi
+  # otherwise we cleanup and move on
   rm "${OUTDIR}/${STAGE3_NAME}"
   rm "${OUTDIR}/${STAGE3_REAL_NAME}.DIGESTS"
   mv "${OUTDIR}/${STAGE3_REAL_NAME}" "${OUTDIR}/${STAGE3_NAME}"
