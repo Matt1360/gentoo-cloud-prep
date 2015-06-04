@@ -8,7 +8,7 @@
 ## Vars
 ##
 TEMP_DIR=~/tmp/catalyst/gentoo
-TARGET_IMAGE=/root/openstack-gentoo-`date +%Y-%m-%d`
+TARGET_IMAGE=/root/openstack-gentoo-$(date +%Y-%m-%d)
 MOUNT_DIR=/mnt
 DATE=$(date +%Y%m%d)
 ORIG_DIR=$(pwd)
