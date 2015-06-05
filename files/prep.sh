@@ -21,29 +21,9 @@ grep -v rootfs /proc/mounts > /etc/mtab
 echo 'net.ipv4.conf.eth0.arp_notify = 1' >> /etc/sysctl.conf
 echo 'vm.swappiness = 0' >> /etc/sysctl.conf
 
-# What kernel is installed?
-INITRD=$(find /boot -name 'initram*')
-KERNEL=$(find /boot -name 'kernel*')
-
-# Let's figure out grub
-cat > /boot/grub/menu.lst << EOF
-# This is a sample grub.conf for use with Genkernel, per the Gentoo handbook
-# http://www.gentoo.org/doc/en/handbook/handbook-x86.xml?part=1&chap=10#doc_chap2
-# If you are not using Genkernel and you need help creating this file, you
-# should consult the handbook. Alternatively, consult the grub.conf.sample that
-# is included with the Grub documentation.
-
-default 0
-timeout 3
-splashimage=(hd0,0)/boot/grub/splash.xpm.gz
-
-title Gentoo Linux
-root (hd0,0)
-kernel ${KERNEL} root=/dev/vda1 ro console=tty0 console=ttyS0
-initrd ${INITRD}
-
-# vim:ft=conf:
-EOF
+# Let's configure out grub
+mkdir /boot/grub
+grub2-mkconfig -o /boot/grub/grub.cfg
 
 # And the fstab
 echo '/dev/vda1 / ext4 defaults 0 0' > /etc/fstab

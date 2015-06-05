@@ -44,7 +44,7 @@ stage4/rcadd: syslog-ng|default sshd|default vixie-cron|default cloud-config|def
 boot/kernel: gentoo
 boot/kernel/gentoo/sources: gentoo-sources
 boot/kernel/gentoo/config: files/kernel.config
-boot/kernel/gentoo/extraversion: reenigne
+boot/kernel/gentoo/extraversion: openstack
 boot/kernel/gentoo/gk_kernargs: --all-ramdisk-modules
 EOF
 

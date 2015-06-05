@@ -35,7 +35,7 @@ cd ${MOUNT_DIR}
 
 # Expand the stage
 echo 'Expanding tarball'
-tar xjpf ${TARBALL} -C ./
+tar xjpf ${TARBALL} -C ${MOUNTDIR}
 
 # Throw in a resolv.conf (because we download portage next)
 cp /etc/resolv.conf etc/resolv.conf
@@ -49,15 +49,14 @@ fi
 echo 'Expanding portage'
 tar xjf /var/tmp/catalyst/snapshots/portage-latest.tar.bz2 -C usr/
 
+# Install grub
+grub2-install ${BLOCK_DEV} --boot-directory ${MOUNT_DIR}/boot
+
 # Clean up
 echo 'Syncing; unmounting'
 sync
 cd ${ORIG_DIR}
 umount ${MOUNT_DIR}
-
-# Install grub
-echo 'Installing grub'
-printf "device (hd0) ${BLOCK_DEV}\nroot (hd0,0)\nsetup (hd0)\nquit\n" | grub --batch
 
 # get rid of block mapping
 losetup -d ${BLOCK_DEV}
