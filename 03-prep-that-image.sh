@@ -11,7 +11,6 @@ TEMP_DIR=~/tmp/catalyst/gentoo
 TARGET_IMAGE=/root/openstack-gentoo-$(date +%Y-%m-%d)
 MOUNT_DIR=/mnt
 DATE=$(date +%Y%m%d)
-ORIG_DIR=$(pwd)
 TARBALL=~/tmp/catalyst/gentoo/stage4-${DATE}.tar.bz2
 
 # create a raw partition and do stuff with it
@@ -30,18 +29,15 @@ mkfs.ext4 -F ${BLOCK_DEV}p1
 echo 'Mounting disk'
 mount ${BLOCK_DEV}p1 ${MOUNT_DIR}
 
-# Let's localize commands now
-cd ${MOUNT_DIR}
-
 # Expand the stage
 echo 'Expanding tarball'
 tar xjpf ${TARBALL} -C ${MOUNT_DIR}
 
 # Throw in a resolv.conf (because we download portage next)
-cp /etc/resolv.conf etc/resolv.conf
+cp /etc/resolv.conf "${MOUNT_DIR}"/etc/resolv.conf
 
 echo 'Expanding portage'
-tar xjf /var/tmp/catalyst/snapshots/portage-latest.tar.bz2 -C usr/
+tar xjf /var/tmp/catalyst/snapshots/portage-latest.tar.bz2 -C "${MOUNT_DIR}"/usr/
 
 # Install grub
 grub2-install ${BLOCK_DEV} --boot-directory ${MOUNT_DIR}/boot
@@ -49,7 +45,6 @@ grub2-install ${BLOCK_DEV} --boot-directory ${MOUNT_DIR}/boot
 # Clean up
 echo 'Syncing; unmounting'
 sync
-cd ${ORIG_DIR}
 umount ${MOUNT_DIR}
 
 # get rid of block mapping
