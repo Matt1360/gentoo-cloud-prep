@@ -35,7 +35,7 @@ sed -i 's/#s0/s0/g' /etc/inittab
 
 # cloud-init config
 # remove the ubuntu stuff
-sed -e '/^system_info/,$ d' /etc/cloud/cloud.cfg
+sed -i -e '/^system_info/,$ d' /etc/cloud/cloud.cfg
 # add the gentoo stuff
 cat >> /etc/cloud/cloud.cfg << EOF
 system_info:
