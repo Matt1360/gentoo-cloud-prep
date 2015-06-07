@@ -15,6 +15,7 @@ DATE=$(date +%Y%m%d)
 SPECFILE=~/tmp/catalyst/stage4.spec
 OUTDIR=~/tmp/catalyst/gentoo
 OUTFILE="${OUTDIR}/stage4-${DATE}.tar.bz2"
+GIT_BASE_DIR=$(dirname "$0")
 
 mkdir -p "${OUTDIR}"
 
@@ -29,6 +30,7 @@ cflags: -O2 -pipe -march=core2
 
 pkgcache_path: /tmp/packages
 kerncache_path: /tmp/kernel
+portage_overlay: ${GIT_BASE_DIR}/portage_overlay
 
 # Probably best made as parameters
 snapshot: latest
@@ -36,7 +38,7 @@ version_stamp: ${DATE}
 
 # Stage 4 stuff
 stage4/use: bash-completion bzip2 idm urandom ipv6 mmx sse sse2 abi_x86_32 abi_x86_64
-stage4/packages: eix dev-vcs/git tmux vim sys-devel/bc cloud-init syslog-ng logrotate vixie-cron dhcpcd net-misc/curl sudo gentoolkit iproute2 grub:0
+stage4/packages: eix dev-vcs/git tmux vim sys-devel/bc cloud-init syslog-ng logrotate vixie-cron dhcpcd net-misc/curl sudo gentoolkit iproute2 grub:2
 stage4/fsscript: files/prep.sh
 stage4/root_overlay: root-overlay
 stage4/rcadd: syslog-ng|default sshd|default vixie-cron|default cloud-config|default cloud-init-local|default cloud-init|default cloud-final|default netmount|default

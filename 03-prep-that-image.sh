@@ -35,17 +35,11 @@ cd ${MOUNT_DIR}
 
 # Expand the stage
 echo 'Expanding tarball'
-tar xjpf ${TARBALL} -C ${MOUNTDIR}
+tar xjpf ${TARBALL} -C ${MOUNT_DIR}
 
 # Throw in a resolv.conf (because we download portage next)
 cp /etc/resolv.conf etc/resolv.conf
 
-# Catalyst doesn't give us portage, so that's cool
-echo 'Downloading portage'
-if [[ ! -f /var/tmp/catalyst/snapshots/portage-latest.tar.bz2 ]]; then
-  echo 'the tarball you downloaded in the 01 script is missing'
-  exit 1
-fi
 echo 'Expanding portage'
 tar xjf /var/tmp/catalyst/snapshots/portage-latest.tar.bz2 -C usr/
 
