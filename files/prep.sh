@@ -33,6 +33,29 @@ echo '/dev/vda1 / ext4 defaults 0 0' > /etc/fstab
 # allow the console log
 sed -i 's/#s0/s0/g' /etc/inittab
 
+# cloud-init config
+# remove the ubuntu stuff
+sed -e '/^system_info/,$ d' /etc/cloud/cloud.cfg
+# add the gentoo stuff
+cat >> /etc/cloud/cloud.cfg << EOF
+system_info:
+   # This will affect which distro class gets used
+   distro: gentoo
+   # Default user name + that default users groups (if added/used)
+   default_user:
+     name: gentoo
+     lock_passwd: True
+     gecos: gentoo
+     groups: [adm]
+     sudo: ["ALL=(ALL) NOPASSWD:ALL"]
+     shell: /bin/bash
+   # Other config here will be given to the distro class and/or path classes
+   paths:
+      cloud_dir: /var/lib/cloud/
+      templates_dir: /etc/cloud/templates/
+   ssh_svcname: sshd
+EOF
+
 # Clean up
 eselect news read all
 eclean-dist --destructive
