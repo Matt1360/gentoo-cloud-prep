@@ -34,6 +34,9 @@ echo '/dev/vda1 / ext4 defaults 0 0' > /etc/fstab
 # allow the console log
 sed -i 's/#s0/s0/g' /etc/inittab
 
+# let ipv6 use normal slaac
+sed -i 's/slaac/#slaac/g' /etc/dhcpcd.conf
+
 # cloud-init config
 # remove the ubuntu stuff
 sed -i -e '/^system_info/,$ d' /etc/cloud/cloud.cfg
