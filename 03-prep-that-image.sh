@@ -4,14 +4,34 @@
 # and we spray that stage4 all over it.  Then we rub some grub (0.97) all over
 # it to make it feel better, and then we box it up and ship it out.
 
-##
-## Vars
-##
-TEMP_DIR=~/tmp/catalyst/gentoo
-TARGET_IMAGE=/root/openstack-gentoo-$(date +%Y-%m-%d)
-MOUNT_DIR=/mnt
-DATE=$(date +%Y%m%d)
-TARBALL=~/tmp/catalyst/gentoo/stage4-${DATE}.tar.bz2
+set -e -u -x
+
+# Vars
+export TEMP_DIR=${TEMP_DIR:-'/root/tmp/catalyst/gentoo'}
+export MOUNT_DIR=${MOUNT_DIR:-'/mnt'}
+export DATE=${DATE:-"$(date +%Y%m%d)"}
+export TARBALL=${TARBALL:-"/root/tmp/catalyst/gentoo/stage4-${DATE}.tar.bz2"}
+# profiles supported are as follows
+# default/linux/amd64/13.0
+# default/linux/amd64/13.0/no-multilib
+# hardened/linux/amd64
+# hardened/linux/amd64/no-multilib
+# hardened/linux/amd64/selinux (eventually)
+# hardened/linux/amd64/no-multilib/selinux (eventually)
+export PROFILE=${PROFILE:-"default/linux/amd64/13.0"}
+if [[ "${PROFILE}" == "default/linux/amd64/13.0" ]]; then
+  PROFILE_SHORTNAME="amd64-default"
+elif [[ "${PROFILE}" == "default/linux/amd64/13.0/no-multilib" ]]; then
+  PROFILE_SHORTNAME="amd64-nomultilib"
+elif [[ "${PROFILE}" == "hardened/linux/amd64" ]]; then
+  PROFILE_SHORTNAME="amd64-hardened"
+elif [[ "${PROFILE}" == "hardened/linux/amd64/no-multilib" ]]; then
+  PROFILE_SHORTNAME="amd64-hardened-nomulitlib"
+else
+  echo 'invalid profile, exiting'
+  exit 1
+fi
+export TARGET_IMAGE=${TARGET_IMAGE:-"/root/openstack-${PROFILE_SHORTNAME}-${DATE}.qcow2"}
 
 # create a raw partition and do stuff with it
 fallocate -l 5G "${TEMP_DIR}/gentoo_root.img"
@@ -51,7 +71,7 @@ umount ${MOUNT_DIR}
 losetup -d ${BLOCK_DEV}
 
 echo 'Converting raw image to qcow2'
-qemu-img convert -c -f raw -O qcow2 ${TEMP_DIR}/gentoo_root.img ${TARGET_IMAGE}.qcow2
+qemu-img convert -c -f raw -O qcow2 ${TEMP_DIR}/gentoo_root.img ${TARGET_IMAGE}
 
 echo 'Cleaning up'
 rm ${TEMP_DIR}/gentoo_root.img

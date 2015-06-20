@@ -11,12 +11,41 @@
 ##
 ## Vars
 ##
-DATE=$(date +%Y%m%d)
-SPECFILE=~/tmp/catalyst/stage4.spec
-OUTDIR=~/tmp/catalyst/gentoo
-OUTFILE="${OUTDIR}/stage4-${DATE}.tar.bz2"
-GIT_BASE_DIR=$(dirname "$0")
+export DATE=${DATE:-"$(date +%Y%m%d)"}
+export SPECFILE=${SPECFILE:-"/root/tmp/catalyst/stage4.spec"}
+export OUTDIR=${OUTDIR:-"/root/tmp/catalyst/gentoo"}
+export GIT_BASE_DIR=${GIT_BASE_DIR:-$(dirname "$0")}
+# profiles supported are as follows
+# default/linux/amd64/13.0
+# default/linux/amd64/13.0/no-multilib
+# hardened/linux/amd64
+# hardened/linux/amd64/no-multilib
+# hardened/linux/amd64/selinux (eventually)
+# hardened/linux/amd64/no-multilib/selinux (eventually)
+export PROFILE=${PROFILE:-"default/linux/amd64/13.0"}
 
+
+if [[ "${PROFILE}" == "default/linux/amd64/13.0" ]]; then
+  PROFILE_SHORTNAME="amd64-default"
+  SOURCE_SUBPATH="stage3-amd64-current"
+  KERNEL_SOURCES="gentoo-sources"
+elif [[ "${PROFILE}" == "default/linux/amd64/13.0/no-multilib" ]]; then
+  PROFILE_SHORTNAME="amd64-nomultilib"
+  SOURCE_SUBPATH="stage3-amd64-nomultilib-current"
+  KERNEL_SOURCES="gentoo-sources"
+elif [[ "${PROFILE}" == "hardened/linux/amd64" ]]; then
+  PROFILE_SHORTNAME="amd64-hardened"
+  SOURCE_SUBPATH="stage3-amd64-hardened-current"
+  KERNEL_SOURCES="hardened-sources"
+elif [[ "${PROFILE}" == "hardened/linux/amd64/no-multilib" ]]; then
+  PROFILE_SHORTNAME="amd64-hardened-nomulitlib"
+  SOURCE_SUBPATH="stage3-amd64-hardened-nomultilib-current"
+  KERNEL_SOURCES="hardened-sources"
+else
+  echo 'invalid profile, exiting'
+  exit 1
+fi
+export OUTFILE=${OUTFILE:-"${OUTDIR}/stage4-${PROFILE_SHORTNAME}-${DATE}.tar.bz2"}
 mkdir -p "${OUTDIR}"
 
 # Build the spec file, first
@@ -24,11 +53,11 @@ cat > "${SPECFILE}" << EOF
 subarch: amd64
 target: stage4
 rel_type: default
-profile: default/linux/amd64/13.0
-source_subpath: stage3-amd64-latest
+profile: ${PROFILE}
+source_subpath: ${SOURCE_SUBPATH}
 cflags: -O2 -pipe -march=core2
 
-pkgcache_path: /tmp/packages
+pkgcache_path: /tmp/packages-${PROFILE_SHORTNAME}
 kerncache_path: /tmp/kernel
 portage_overlay: ${GIT_BASE_DIR}/portage_overlay
 
@@ -44,8 +73,8 @@ stage4/root_overlay: root-overlay
 stage4/rcadd: syslog-ng|default sshd|default vixie-cron|default cloud-config|default cloud-init-local|default cloud-init|default cloud-final|default netmount|default
 
 boot/kernel: gentoo
-boot/kernel/gentoo/sources: gentoo-sources
-boot/kernel/gentoo/config: files/kernel.config
+boot/kernel/gentoo/sources: ${KERNEL_SOURCES}
+boot/kernel/gentoo/config: files/kernel-${PROFILE_SHORTNAME}.config
 boot/kernel/gentoo/extraversion: openstack
 boot/kernel/gentoo/gk_kernargs: --all-ramdisk-modules
 EOF
