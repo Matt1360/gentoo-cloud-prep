@@ -31,12 +31,13 @@ else
   exit 1
 fi
 export TARBALL=${TARBALL:-"/root/tmp/catalyst/gentoo/stage4-${PROFILE_SHORTNAME}-${DATE}.tar.bz2"}
+export TEMP_IMAGE=${TEMP_IMAGE:-"gentoo-${PROFILE_SHORTNAME}.img"}
 export TARGET_IMAGE=${TARGET_IMAGE:-"/root/openstack-${PROFILE_SHORTNAME}-${DATE}.qcow2"}
 
 # create a raw partition and do stuff with it
-fallocate -l 5G "${TEMP_DIR}/gentoo_root.img"
-losetup -f "${TEMP_DIR}/gentoo_root.img"
-BLOCK_DEV=$(losetup | grep 'gentoo_root.img' | awk '{print $1}')
+fallocate -l 5G "${TEMP_DIR}/${TEMP_IMAGE}"
+losetup -f "${TEMP_DIR}/${TEMP_IMAGE}"
+BLOCK_DEV=$(losetup | grep "${TEMP_IMAGE}" | awk '{print $1}')
 
 # Okay, we have the disk, let's prep it
 echo 'Building disk'
@@ -71,7 +72,7 @@ umount ${MOUNT_DIR}
 losetup -d ${BLOCK_DEV}
 
 echo 'Converting raw image to qcow2'
-qemu-img convert -c -f raw -O qcow2 ${TEMP_DIR}/gentoo_root.img ${TARGET_IMAGE}
+qemu-img convert -c -f raw -O qcow2 ${TEMP_DIR}/${TEMP_IMAGE} ${TARGET_IMAGE}
 
 echo 'Cleaning up'
-rm ${TEMP_DIR}/gentoo_root.img
+rm "${TEMP_DIR}/${TEMP_IMAGE}"
