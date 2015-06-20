@@ -30,7 +30,7 @@ if [[ "${PROFILE}" == "default/linux/amd64/13.0" ]]; then
   SOURCE_SUBPATH="stage3-amd64-current"
   KERNEL_SOURCES="gentoo-sources"
 elif [[ "${PROFILE}" == "default/linux/amd64/13.0/no-multilib" ]]; then
-  PROFILE_SHORTNAME="amd64-nomultilib"
+  PROFILE_SHORTNAME="amd64-default-nomultilib"
   SOURCE_SUBPATH="stage3-amd64-nomultilib-current"
   KERNEL_SOURCES="gentoo-sources"
 elif [[ "${PROFILE}" == "hardened/linux/amd64" ]]; then

@@ -21,7 +21,7 @@ export PROFILE=${PROFILE:-"default/linux/amd64/13.0"}
 if [[ "${PROFILE}" == "default/linux/amd64/13.0" ]]; then
   PROFILE_SHORTNAME="amd64-default"
 elif [[ "${PROFILE}" == "default/linux/amd64/13.0/no-multilib" ]]; then
-  PROFILE_SHORTNAME="amd64-nomultilib"
+  PROFILE_SHORTNAME="amd64-default-nomultilib"
 elif [[ "${PROFILE}" == "hardened/linux/amd64" ]]; then
   PROFILE_SHORTNAME="amd64-hardened"
 elif [[ "${PROFILE}" == "hardened/linux/amd64/no-multilib" ]]; then
