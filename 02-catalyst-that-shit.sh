@@ -58,7 +58,7 @@ source_subpath: ${SOURCE_SUBPATH}
 cflags: -O2 -pipe -march=core2
 
 pkgcache_path: /tmp/packages-${PROFILE_SHORTNAME}
-kerncache_path: /tmp/kernel
+kerncache_path: /tmp/kernel-${PROFILE_SHORTNAME}
 portage_overlay: ${GIT_BASE_DIR}/portage_overlay
 
 # Probably best made as parameters
