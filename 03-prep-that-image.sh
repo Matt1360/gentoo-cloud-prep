@@ -10,7 +10,6 @@ set -e -u -x
 export TEMP_DIR=${TEMP_DIR:-'/root/tmp/catalyst/gentoo'}
 export MOUNT_DIR=${MOUNT_DIR:-'/mnt'}
 export DATE=${DATE:-"$(date +%Y%m%d)"}
-export TARBALL=${TARBALL:-"/root/tmp/catalyst/gentoo/stage4-${DATE}.tar.bz2"}
 # profiles supported are as follows
 # default/linux/amd64/13.0
 # default/linux/amd64/13.0/no-multilib
@@ -31,6 +30,7 @@ else
   echo 'invalid profile, exiting'
   exit 1
 fi
+export TARBALL=${TARBALL:-"/root/tmp/catalyst/gentoo/stage4-${PROFILE_SHORTNAME}-${DATE}.tar.bz2"}
 export TARGET_IMAGE=${TARGET_IMAGE:-"/root/openstack-${PROFILE_SHORTNAME}-${DATE}.qcow2"}
 
 # create a raw partition and do stuff with it
