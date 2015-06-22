@@ -59,12 +59,15 @@ system_info:
    ssh_svcname: sshd
 EOF
 
-# Clean up
+# Clean up portage
 emerge --verbose=n --depclean
 eix-update
 emaint all -f
 eselect news read all
 eclean-dist --destructive
+sed -i '/^USE=\"\${USE}\ \ build\"$/d' /etc/portage/make.conf
+
+# clean up system
 passwd -d root
 rm -f /usr/portage/distfiles/*
 rm -f /etc/ssh/ssh_host_*
