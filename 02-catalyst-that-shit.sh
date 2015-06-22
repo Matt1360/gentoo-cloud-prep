@@ -8,9 +8,9 @@
 # your own scenario.  I have a VM that poops out images for me, and these
 # are the fields I use.
 
-##
-## Vars
-##
+set -e -u -x
+
+# Vars
 export DATE=${DATE:-"$(date +%Y%m%d)"}
 export SPECFILE=${SPECFILE:-"/root/tmp/catalyst/stage4.spec"}
 export OUTDIR=${OUTDIR:-"/root/tmp/catalyst/gentoo"}

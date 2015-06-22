@@ -3,9 +3,9 @@
 # Note that I use this script to update all my current stages, and rootfs,
 # but this repo is more specifically for Gentoo, so have some Gentoo.
 
-##
-## Vars
-##
+set -e -u -x
+
+# Vars
 export MIRROR=${MIRROR:-"http://gentoo.osuosl.org"}
 export OUTDIR=${OUTDIR:-"/var/tmp/catalyst/builds"}
 export PORTAGE_DIR=${PORTAGE_DIR:-"/var/tmp/catalyst/snapshots"}
