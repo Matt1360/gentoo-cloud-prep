@@ -59,6 +59,15 @@ system_info:
    ssh_svcname: sshd
 EOF
 
+# resize the disk the easy way
+cat >> /etc/local.d/01-firstboot-diskresize.start << EOF
+#!/usr/bin/env bash
+(echo d; echo n; echo; echo; echo; echo; echo w) | fdisk /dev/vda
+rm /etc/local.d/01-firstboot-diskresize.start
+reboot
+EOF
+chmod +x /etc/local.d/01-firstboot-diskresize.start
+
 # Clean up portage
 emerge --verbose=n --depclean
 eix-update
