@@ -12,7 +12,6 @@ set -e -u -x
 
 # Vars
 export DATE=${DATE:-"$(date +%Y%m%d)"}
-export SPECFILE=${SPECFILE:-"/root/tmp/catalyst/stage4.spec"}
 export OUTDIR=${OUTDIR:-"/root/tmp/catalyst/gentoo"}
 export GIT_BASE_DIR=${GIT_BASE_DIR:-$(dirname "$0")}
 # profiles supported are as follows
@@ -46,6 +45,7 @@ else
   exit 1
 fi
 export OUTFILE=${OUTFILE:-"${OUTDIR}/stage4-${PROFILE_SHORTNAME}-${DATE}.tar.bz2"}
+export SPECFILE=${SPECFILE:-"/root/tmp/catalyst/stage4-${PROFILE_SHORTNAME}.spec"}
 mkdir -p "${OUTDIR}"
 
 # Build the spec file, first
