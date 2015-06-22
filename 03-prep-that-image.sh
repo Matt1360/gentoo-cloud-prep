@@ -25,7 +25,7 @@ elif [[ "${PROFILE}" == "default/linux/amd64/13.0/no-multilib" ]]; then
 elif [[ "${PROFILE}" == "hardened/linux/amd64" ]]; then
   PROFILE_SHORTNAME="amd64-hardened"
 elif [[ "${PROFILE}" == "hardened/linux/amd64/no-multilib" ]]; then
-  PROFILE_SHORTNAME="amd64-hardened-nomulitlib"
+  PROFILE_SHORTNAME="amd64-hardened-nomultilib"
 else
   echo 'invalid profile, exiting'
   exit 1

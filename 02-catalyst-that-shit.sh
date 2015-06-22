@@ -37,7 +37,7 @@ elif [[ "${PROFILE}" == "hardened/linux/amd64" ]]; then
   SOURCE_SUBPATH="stage3-amd64-hardened-current"
   KERNEL_SOURCES="hardened-sources"
 elif [[ "${PROFILE}" == "hardened/linux/amd64/no-multilib" ]]; then
-  PROFILE_SHORTNAME="amd64-hardened-nomulitlib"
+  PROFILE_SHORTNAME="amd64-hardened-nomultilib"
   SOURCE_SUBPATH="stage3-amd64-hardened-nomultilib-current"
   KERNEL_SOURCES="hardened-sources"
 else
