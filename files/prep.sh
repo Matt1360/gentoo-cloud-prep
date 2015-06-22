@@ -60,6 +60,9 @@ system_info:
 EOF
 
 # Clean up
+emerge --verbose=n --depclean
+eix-update
+emaint all -f
 eselect news read all
 eclean-dist --destructive
 passwd -d root
