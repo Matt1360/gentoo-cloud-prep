@@ -10,9 +10,8 @@ locale-gen
 eselect locale set en_US.utf8
 
 # Networking!
-ln -s /etc/init.d/net.lo /etc/init.d/net.eth0
 rc-update add net.lo default
-rc-update add net.eth0 default
+rc-update add dhcpcd default
 
 # Some rootfs stuff
 grep -v rootfs /proc/mounts > /etc/mtab
