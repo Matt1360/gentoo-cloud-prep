@@ -55,7 +55,7 @@ mount ${BLOCK_DEV}p1 ${MOUNT_DIR}/${PROFILE_SHORTNAME}
 echo 'Expanding tarball'
 tar xjpf ${TARBALL} -C ${MOUNT_DIR}/${PROFILE_SHORTNAME}
 
-# Throw in a resolv.conf (because we download portage next)
+# Throw in a resolv.conf
 cp /etc/resolv.conf "${MOUNT_DIR}/${PROFILE_SHORTNAME}/etc/resolv.conf"
 
 # Install grub
