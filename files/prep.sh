@@ -69,7 +69,7 @@ sed -i '/^USE=\"\${USE}\ \ build\"$/d' /etc/portage/make.conf
 
 # clean up system
 passwd -d root
-rm -f /usr/portage/distfiles/*
+rm -Rf /usr/portage/*
 rm -f /etc/ssh/ssh_host_*
 rm -f /etc/resolv.conf
 rm -f /root/.bash_history

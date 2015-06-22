@@ -58,9 +58,6 @@ tar xjpf ${TARBALL} -C ${MOUNT_DIR}/${PROFILE_SHORTNAME}
 # Throw in a resolv.conf (because we download portage next)
 cp /etc/resolv.conf "${MOUNT_DIR}/${PROFILE_SHORTNAME}/etc/resolv.conf"
 
-echo 'Expanding portage'
-tar xjf /var/tmp/catalyst/snapshots/portage-latest.tar.bz2 -C "${MOUNT_DIR}/${PROFILE_SHORTNAME}"/usr/
-
 # Install grub
 grub2-install ${BLOCK_DEV} --boot-directory ${MOUNT_DIR}/${PROFILE_SHORTNAME}/boot
 
