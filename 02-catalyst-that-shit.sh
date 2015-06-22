@@ -86,4 +86,4 @@ catalyst -f "${SPECFILE}"
 rm "${SPECFILE}"
 
 # Move the outputted image
-mv "/var/tmp/catalyst/builds/default/stage4-amd64-${DATE}.tar.bz2" "${OUTFILE}"
+mv "/var/tmp/catalyst/builds/${PROFILE_SHORTNAME}/stage4-amd64-${DATE}.tar.bz2" "${OUTFILE}"
