@@ -52,7 +52,7 @@ mkdir -p "${OUTDIR}"
 cat > "${SPECFILE}" << EOF
 subarch: amd64
 target: stage4
-rel_type: default
+rel_type: ${PROFILE_SHORTNAME}
 profile: ${PROFILE}
 source_subpath: ${SOURCE_SUBPATH}
 cflags: -O2 -pipe -march=core2
@@ -67,7 +67,7 @@ version_stamp: ${DATE}
 
 # Stage 4 stuff
 stage4/use: bash-completion bzip2 idm urandom ipv6 mmx sse sse2 abi_x86_32 abi_x86_64
-stage4/packages: eix vim cloud-init syslog-ng logrotate vixie-cron dhcpcd sudo gentoolkit iproute2 grub:2 sys-apps/lsb-release
+stage4/packages: eix vim sys-devel/bc cloud-init syslog-ng logrotate vixie-cron dhcpcd sudo gentoolkit iproute2 grub:2 sys-apps/lsb-release
 stage4/fsscript: files/prep.sh
 stage4/root_overlay: root-overlay
 stage4/rcadd: syslog-ng|default sshd|default vixie-cron|default cloud-config|default cloud-init-local|default cloud-init|default cloud-final|default netmount|default
