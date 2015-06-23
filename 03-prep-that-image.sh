@@ -37,7 +37,7 @@ export TARGET_IMAGE=${TARGET_IMAGE:-"/root/openstack-${PROFILE_SHORTNAME}-${DATE
 # create a raw partition and do stuff with it
 fallocate -l 5G "${TEMP_DIR}/${TEMP_IMAGE}"
 losetup -f "${TEMP_DIR}/${TEMP_IMAGE}"
-BLOCK_DEV=$(losetup | grep "${TEMP_IMAGE}" | awk '{print $1}')
+BLOCK_DEV=$(losetup | grep "${TEMP_IMAGE}$" | awk '{print $1}')
 
 # Okay, we have the disk, let's prep it
 echo 'Building disk'
