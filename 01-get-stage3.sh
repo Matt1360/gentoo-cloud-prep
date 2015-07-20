@@ -82,6 +82,7 @@ PORTAGE_LIVE_MD5=$(curl -s "${MIRROR}/snapshots/portage-latest.tar.bz2.md5sum" |
 OUR_MD5=$(md5sum "${PORTAGE_DIR}/portage-latest.tar.bz2" | awk {'print $1'})
 if [[ "${PORTAGE_LIVE_MD5}" != "${OUR_MD5}" ]]; then
   echo 'downloading new portage tarball'
+  mkdir -p "${PORTAGE_DIR}"
   curl -s "${MIRROR}/snapshots/portage-latest.tar.bz2" -o "${PORTAGE_DIR}/portage-latest.tar.bz2"
   curl -s "${MIRROR}/snapshots/portage-latest.tar.bz2.gpgsig" -o "${PORTAGE_DIR}/portage-latest.tar.bz2.gpgsig"
   gkeys verify -F "${PORTAGE_DIR}/portage-latest.tar.bz2"
