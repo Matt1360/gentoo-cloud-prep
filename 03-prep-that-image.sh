@@ -63,9 +63,9 @@ cp /etc/resolv.conf "${MOUNT_DIR}/${PROFILE_SHORTNAME}/etc/resolv.conf"
 # Add the resize script
 mkdir -p "${MOUNT_DIR}/${PROFILE_SHORTNAME}/opt/bin"
 cp "${DIR}/files/growpart" "${MOUNT_DIR}/${PROFILE_SHORTNAME}/opt/bin/growpart"
-cp "${DIR}/files/cloud.cfg" "${MOUNT_DIR}/${PROFILE_SHORTNAME}/etc/cloud.cfg"
+cp "${DIR}/files/cloud.cfg" "${MOUNT_DIR}/${PROFILE_SHORTNAME}/etc/cloud/cloud.cfg"
 chmod 0755 "${MOUNT_DIR}/${PROFILE_SHORTNAME}/opt/bin/growpart"
-chmod 0644 "${MOUNT_DIR}/${PROFILE_SHORTNAME}/etc/cloud.cfg"
+chmod 0644 "${MOUNT_DIR}/${PROFILE_SHORTNAME}/etc/cloud/cloud.cfg"
 chown root:root "${MOUNT_DIR}/${PROFILE_SHORTNAME}/opt/bin/growpart"
 chown root:root "${MOUNT_DIR}/${PROFILE_SHORTNAME}/etc/cloud/cloud.cfg"
 
