@@ -24,11 +24,11 @@ echo 'vm.swappiness = 0' >> /etc/sysctl.conf
 mkdir /boot/grub
 echo 'GRUB_CMDLINE_LINUX="console=tty0 console=ttyS0,115200n8"' >> /etc/default/grub
 grub2-mkconfig -o /boot/grub/grub.cfg
-sed -r -i 's/loop[0-9]+p1/vda1/g' /boot/grub/grub.cfg
-sed -i 's/UUID=[a-z,0-9,-]*/\/dev\/vda1/g' /boot/grub/grub.cfg
+sed -r -i 's/loop[0-9]+p1/vda2/g' /boot/grub/grub.cfg
+sed -i 's/UUID=[a-z,0-9,-]*/\/dev\/vda2/g' /boot/grub/grub.cfg
 
 # And the fstab
-echo '/dev/vda1 / ext4 defaults 0 0' > /etc/fstab
+echo '/dev/vda2 / ext4 defaults 0 0' > /etc/fstab
 
 # allow the console log
 sed -i 's/#s0/s0/g' /etc/inittab
