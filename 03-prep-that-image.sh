@@ -44,6 +44,7 @@ echo 'Building disk'
 parted -s ${BLOCK_DEV} mklabel gpt
 parted -s --align=none ${BLOCK_DEV} mkpart primary 1M 100%
 parted -s ${BLOCK_DEV} set 1 boot on
+parted -s ${BLOCK_DEV} set 1 bios_grub on
 mkfs.ext4 -F ${BLOCK_DEV}p1
 
 # Mount it
