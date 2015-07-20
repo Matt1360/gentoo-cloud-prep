@@ -66,7 +66,7 @@ cp "${DIR}/files/cloud.cfg" "${MOUNT_DIR}/${PROFILE_SHORTNAME}/etc/cloud.cfg"
 chmod 0755 "${MOUNT_DIR}/${PROFILE_SHORTNAME}/opt/bin/growpart"
 chmod 0644 "${MOUNT_DIR}/${PROFILE_SHORTNAME}/etc/cloud.cfg"
 chown root:root "${MOUNT_DIR}/${PROFILE_SHORTNAME}/opt/bin/growpart"
-chown root:root "${MOUNT_DIR}/${PROFILE_SHORTNAME}/etc/cloud.cfg"
+chown root:root "${MOUNT_DIR}/${PROFILE_SHORTNAME}/etc/cloud/cloud.cfg"
 
 # Install grub
 grub2-install ${BLOCK_DEV} --boot-directory ${MOUNT_DIR}/${PROFILE_SHORTNAME}/boot
