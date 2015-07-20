@@ -69,7 +69,9 @@ if [[ "${SHA512}" != "${SHA512_REAL}" ]]; then
     exit 1
   fi
   # otherwise we cleanup and move on
-  rm "${OUTDIR}/${STAGE3_NAME}"
+  if [[ -f "${OUTDIR}/${STAGE3_NAME}" ]]; then
+    rm "${OUTDIR}/${STAGE3_NAME}"
+  fi
   rm "${OUTDIR}/${STAGE3_REAL_NAME}.DIGESTS.asc"
   mv "${OUTDIR}/${STAGE3_REAL_NAME}" "${OUTDIR}/${STAGE3_NAME}"
 fi
