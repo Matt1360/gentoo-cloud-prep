@@ -35,6 +35,8 @@ sed -i 's/#s0/s0/g' /etc/inittab
 
 # let ipv6 use normal slaac
 sed -i 's/slaac/#slaac/g' /etc/dhcpcd.conf
+# don't let dhcpcd set domain name or hostname
+sed -i 's/domain_name\,\ domain_search\,\ host_name/domain_search/g' /etc/dhcpcd.conf
 
 # resize the disk the easy way
 cat >> /etc/local.d/01-firstboot-diskresize.start << EOF
