@@ -38,6 +38,23 @@ sed -i 's/slaac/#slaac/g' /etc/dhcpcd.conf
 # don't let dhcpcd set domain name or hostname
 sed -i 's/domain_name\,\ domain_search\,\ host_name/domain_search/g' /etc/dhcpcd.conf
 
+# need to do this here because it clobbers an openrc owned file
+cat > /etc/conf.d/hostname << EOL
+# Set to the hostname of this machine
+if [ -f /etc/hostname ];then
+  hostname=$(cat /etc/hostname 2> /dev/null | cut -d"." -f1 2> /dev/null)
+else
+  hostname="localhost"
+fi
+EOL
+chmod 0644 /etc/conf.d/hostname
+chown root:root /etc/conf.d/hostname
+
+# set a nice default for /etc/resolv.conf
+cat > /etc/resolv.conf << EOL
+nameserver 8.8.8.8
+EOL
+
 # let's upgrade (security fixes and otherwise)
 emerge -uDNv --with-bdeps=y --jobs=2 @world
 emerge --verbose=n --depclean
@@ -57,7 +74,6 @@ passwd -d root
 passwd -l root
 rm -f /usr/portage/distfiles/*
 rm -f /etc/ssh/ssh_host_*
-rm -f /etc/resolv.conf
 rm -f /root/.bash_history
 rm -f /root/.nano_history
 rm -f /root/.lesshst
