@@ -38,6 +38,12 @@ sed -i 's/slaac/#slaac/g' /etc/dhcpcd.conf
 # don't let dhcpcd set domain name or hostname
 sed -i 's/domain_name\,\ domain_search\,\ host_name/domain_search/g' /etc/dhcpcd.conf
 
+# let's upgrade (security fixes and otherwise)
+emerge -uDNv --with-bdeps=y --jobs=2 @world
+emerge --verbose=n --depclean
+emerge -v --usepkg=n @preserved-rebuild
+etc-update --automode -3
+
 # Clean up portage
 emerge --verbose=n --depclean
 eix-update
