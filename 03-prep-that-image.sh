@@ -36,7 +36,7 @@ export TEMP_IMAGE=${TEMP_IMAGE:-"gentoo-${PROFILE_SHORTNAME}.img"}
 export TARGET_IMAGE=${TARGET_IMAGE:-"/root/openstack-${PROFILE_SHORTNAME}-${DATE}.qcow2"}
 
 # create a raw partition and do stuff with it
-fallocate -l 5G "${TEMP_DIR}/${TEMP_IMAGE}"
+fallocate -l 2G "${TEMP_DIR}/${TEMP_IMAGE}"
 BLOCK_DEV=$(losetup -f --show "${TEMP_DIR}/${TEMP_IMAGE}")
 
 # Okay, we have the disk, let's prep it
