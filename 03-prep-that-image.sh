@@ -42,15 +42,16 @@ BLOCK_DEV=$(losetup -f --show "${TEMP_DIR}/${TEMP_IMAGE}")
 # Okay, we have the disk, let's prep it
 echo 'Building disk'
 parted -s ${BLOCK_DEV} mklabel gpt
-parted -s --align=none ${BLOCK_DEV} mkpart primary 1M 100%
+parted -s --align=none ${BLOCK_DEV} mkpart bios_boot 0 2M
+parted -s --align=none ${BLOCK_DEV} mkpart primary 2M 100%
 parted -s ${BLOCK_DEV} set 1 boot on
 parted -s ${BLOCK_DEV} set 1 bios_grub on
-mkfs.ext4 -F ${BLOCK_DEV}p1
+mkfs.ext4 -F ${BLOCK_DEV}p2
 
 # Mount it
 echo 'Mounting disk'
 mkdir -p ${MOUNT_DIR}/${PROFILE_SHORTNAME}
-mount ${BLOCK_DEV}p1 ${MOUNT_DIR}/${PROFILE_SHORTNAME}
+mount ${BLOCK_DEV}p2 ${MOUNT_DIR}/${PROFILE_SHORTNAME}
 
 # Expand the stage
 echo 'Expanding tarball'
