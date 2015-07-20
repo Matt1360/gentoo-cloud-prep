@@ -60,14 +60,16 @@ tar xjpf ${TARBALL} -C ${MOUNT_DIR}/${PROFILE_SHORTNAME}
 # Throw in a resolv.conf
 cp /etc/resolv.conf "${MOUNT_DIR}/${PROFILE_SHORTNAME}/etc/resolv.conf"
 
-# Add the resize script
-mkdir -p "${MOUNT_DIR}/${PROFILE_SHORTNAME}/opt/bin"
-cp "${DIR}/files/growpart" "${MOUNT_DIR}/${PROFILE_SHORTNAME}/opt/bin/growpart"
+# Add the resize script, installing to /usr/bin because cloud-init doesn't look in nice places
+cp "${DIR}/files/growpart" "${MOUNT_DIR}/${PROFILE_SHORTNAME}/usr/bin/growpart"
 cp "${DIR}/files/cloud.cfg" "${MOUNT_DIR}/${PROFILE_SHORTNAME}/etc/cloud/cloud.cfg"
-chmod 0755 "${MOUNT_DIR}/${PROFILE_SHORTNAME}/opt/bin/growpart"
+cp "${DIR}/files/hostname" "${MOUNT_DIR}/${PROFILE_SHORTNAME}/etc/conf.d/hostname"
+chmod 0755 "${MOUNT_DIR}/${PROFILE_SHORTNAME}/usr/bin/growpart"
 chmod 0644 "${MOUNT_DIR}/${PROFILE_SHORTNAME}/etc/cloud/cloud.cfg"
-chown root:root "${MOUNT_DIR}/${PROFILE_SHORTNAME}/opt/bin/growpart"
+chmod 0644 "${MOUNT_DIR}/${PROFILE_SHORTNAME}/etc/conf.d/hostname"
+chown root:root "${MOUNT_DIR}/${PROFILE_SHORTNAME}/usr/bin/growpart"
 chown root:root "${MOUNT_DIR}/${PROFILE_SHORTNAME}/etc/cloud/cloud.cfg"
+chown root:root "${MOUNT_DIR}/${PROFILE_SHORTNAME}/etc/conf.d/hostname"
 
 # Install grub
 grub2-install ${BLOCK_DEV} --boot-directory ${MOUNT_DIR}/${PROFILE_SHORTNAME}/boot
