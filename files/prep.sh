@@ -38,15 +38,6 @@ sed -i 's/slaac/#slaac/g' /etc/dhcpcd.conf
 # don't let dhcpcd set domain name or hostname
 sed -i 's/domain_name\,\ domain_search\,\ host_name/domain_search/g' /etc/dhcpcd.conf
 
-# resize the disk the easy way
-cat >> /etc/local.d/01-firstboot-diskresize.start << EOF
-#!/usr/bin/env bash
-(echo d; echo n; echo; echo; echo; echo; echo w) | fdisk /dev/vda
-rm /etc/local.d/01-firstboot-diskresize.start
-reboot
-EOF
-chmod +x /etc/local.d/01-firstboot-diskresize.start
-
 # Clean up portage
 emerge --verbose=n --depclean
 eix-update
