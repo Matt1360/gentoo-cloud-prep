@@ -7,6 +7,7 @@
 set -e -u -x
 
 # Vars
+DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 export TEMP_DIR=${TEMP_DIR:-'/root/tmp/catalyst/gentoo'}
 export MOUNT_DIR=${MOUNT_DIR:-'/mnt'}
 export DATE=${DATE:-"$(date +%Y%m%d)"}
@@ -40,8 +41,8 @@ BLOCK_DEV=$(losetup -f --show "${TEMP_DIR}/${TEMP_IMAGE}")
 
 # Okay, we have the disk, let's prep it
 echo 'Building disk'
-parted -s ${BLOCK_DEV} mklabel msdos
-parted -s --align=none ${BLOCK_DEV} mkpart primary 2048s 100%
+parted -s ${BLOCK_DEV} mklabel gpt
+parted -s --align=none ${BLOCK_DEV} mkpart primary 1M 100%
 parted -s ${BLOCK_DEV} set 1 boot on
 mkfs.ext4 -F ${BLOCK_DEV}p1
 
@@ -56,6 +57,15 @@ tar xjpf ${TARBALL} -C ${MOUNT_DIR}/${PROFILE_SHORTNAME}
 
 # Throw in a resolv.conf
 cp /etc/resolv.conf "${MOUNT_DIR}/${PROFILE_SHORTNAME}/etc/resolv.conf"
+
+# Add the resize script
+mkdir -p "${MOUNT_DIR}/${PROFILE_SHORTNAME}/opt/bin"
+cp "${DIR}/files/growpart" "${MOUNT_DIR}/${PROFILE_SHORTNAME}/opt/bin/growpart"
+cp "${DIR}/files/cloud.cfg" "${MOUNT_DIR}/${PROFILE_SHORTNAME}/etc/cloud.cfg"
+chmod 0755 "${MOUNT_DIR}/${PROFILE_SHORTNAME}/opt/bin/growpart"
+chmod 0644 "${MOUNT_DIR}/${PROFILE_SHORTNAME}/etc/cloud.cfg"
+chown root:root "${MOUNT_DIR}/${PROFILE_SHORTNAME}/opt/bin/growpart"
+chown root:root "${MOUNT_DIR}/${PROFILE_SHORTNAME}/etc/cloud.cfg"
 
 # Install grub
 grub2-install ${BLOCK_DEV} --boot-directory ${MOUNT_DIR}/${PROFILE_SHORTNAME}/boot

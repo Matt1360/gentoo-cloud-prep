@@ -10,7 +10,7 @@ Some scripts to help with the following:
 
 First we need some packages.
 
-`# emerge catalyst qemu`
+`# emerge catalyst qemu parted`
 
 Now we can run `catalyst` and `qemu-img`.  If you only need the stage4, you can omit `qemu`.
 

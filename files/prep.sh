@@ -36,29 +36,6 @@ sed -i 's/#s0/s0/g' /etc/inittab
 # let ipv6 use normal slaac
 sed -i 's/slaac/#slaac/g' /etc/dhcpcd.conf
 
-# cloud-init config
-# remove the ubuntu stuff
-sed -i -e '/^system_info/,$ d' /etc/cloud/cloud.cfg
-# add the gentoo stuff
-cat >> /etc/cloud/cloud.cfg << EOF
-system_info:
-   # This will affect which distro class gets used
-   distro: gentoo
-   # Default user name + that default users groups (if added/used)
-   default_user:
-     name: gentoo
-     lock_passwd: True
-     gecos: gentoo
-     groups: [adm]
-     sudo: ["ALL=(ALL) NOPASSWD:ALL"]
-     shell: /bin/bash
-   # Other config here will be given to the distro class and/or path classes
-   paths:
-      cloud_dir: /var/lib/cloud/
-      templates_dir: /etc/cloud/templates/
-   ssh_svcname: sshd
-EOF
-
 # resize the disk the easy way
 cat >> /etc/local.d/01-firstboot-diskresize.start << EOF
 #!/usr/bin/env bash
