@@ -10,7 +10,7 @@ Some scripts to help with the following:
 
 First we need some packages.
 
-`# emerge catalyst qemu parted app-crypt/gkeys`
+`# emerge catalyst qemu parted app-crypt/gkeys grub:2`
 
 Now we can run `catalyst` and `qemu-img`.  If you only need the stage4, you can omit `qemu`.
 
@@ -24,6 +24,8 @@ set the profile you want, valid ones are as follows
 - hardened/linux/amd64/no-multilib
 
 `export PROFILE="default/linux/amd64/13.0"`
+
+Of note to hardened users is that this uses catalyst, which uses chroots, so you need to allow grsec things for chroots
 
 ### Quick Overview: What do?
 

@@ -55,7 +55,7 @@ mount ${BLOCK_DEV}p2 ${MOUNT_DIR}/${PROFILE_SHORTNAME}
 
 # Expand the stage
 echo 'Expanding tarball'
-tar xjpf ${TARBALL} -C ${MOUNT_DIR}/${PROFILE_SHORTNAME}
+tar xjpf --xattrs ${TARBALL} -C ${MOUNT_DIR}/${PROFILE_SHORTNAME}
 
 # Install grub
 grub2-install ${BLOCK_DEV} --boot-directory ${MOUNT_DIR}/${PROFILE_SHORTNAME}/boot
