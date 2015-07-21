@@ -7,7 +7,6 @@
 set -e -u -x
 
 # Vars
-DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 export TEMP_DIR=${TEMP_DIR:-'/root/tmp/catalyst/gentoo'}
 export MOUNT_DIR=${MOUNT_DIR:-'/mnt'}
 export DATE=${DATE:-"$(date +%Y%m%d)"}
