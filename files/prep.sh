@@ -56,9 +56,9 @@ nameserver 8.8.8.8
 EOL
 
 # let's upgrade (security fixes and otherwise)
-emerge -uDNv --with-bdeps=y --jobs=2 @world
-emerge --verbose=n --depclean
-emerge -v --usepkg=n @preserved-rebuild
+USE="-build" emerge -uDNv --with-bdeps=y --jobs=2 @world
+USE="-build" emerge --verbose=n --depclean
+USE="-build" emerge -v --usepkg=n @preserved-rebuild
 etc-update --automode -3
 
 # Clean up portage
