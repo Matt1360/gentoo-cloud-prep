@@ -9,10 +9,6 @@ echo 'en_US ISO-8859-1' >> /etc/locale.gen
 locale-gen
 eselect locale set en_US.utf8
 
-# Networking!
-rc-update add net.lo default
-rc-update add dhcpcd default
-
 # Some rootfs stuff
 grep -v rootfs /proc/mounts > /etc/mtab
 

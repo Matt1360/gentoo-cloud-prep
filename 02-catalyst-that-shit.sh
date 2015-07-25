@@ -67,10 +67,10 @@ version_stamp: ${DATE}
 
 # Stage 4 stuff
 stage4/use: bash-completion bzip2 idm urandom ipv6 mmx sse sse2 abi_x86_32 abi_x86_64
-stage4/packages: eix vim bc cloud-init syslog-ng logrotate vixie-cron dhcpcd sudo gentoolkit iproute2 grub:2 lsb-release gptfdisk dmidecode
+stage4/packages: eix vim bc cloud-init syslog-ng logrotate vixie-cron dhcpcd sudo gentoolkit iproute2 grub:2 lsb-release gptfdisk dmidecode acpid
 stage4/fsscript: files/prep.sh
 stage4/root_overlay: root-overlay
-stage4/rcadd: syslog-ng|default sshd|default vixie-cron|default cloud-config|default cloud-init-local|default cloud-init|default cloud-final|default netmount|default
+stage4/rcadd: syslog-ng|default sshd|default vixie-cron|default cloud-config|default cloud-init-local|default cloud-init|default cloud-final|default netmount|default acpid|default dhcpcd|default net.lo|default
 
 boot/kernel: gentoo
 boot/kernel/gentoo/sources: ${KERNEL_SOURCES}
