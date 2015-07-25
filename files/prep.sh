@@ -39,7 +39,7 @@ sed -i 's/slaac/#slaac/g' /etc/dhcpcd.conf
 sed -i 's/domain_name\,\ domain_search\,\ host_name/domain_search/g' /etc/dhcpcd.conf
 
 # need to do this here because it clobbers an openrc owned file
-cat > /etc/conf.d/hostname << EOL
+cat > /etc/conf.d/hostname << "EOL"
 # Set to the hostname of this machine
 if [ -f /etc/hostname ];then
   hostname=$(cat /etc/hostname 2> /dev/null | cut -d"." -f1 2> /dev/null)
