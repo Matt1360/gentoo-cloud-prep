@@ -10,6 +10,7 @@ set -e -u -x
 export TEMP_DIR=${TEMP_DIR:-'/root/tmp/catalyst/gentoo'}
 export MOUNT_DIR=${MOUNT_DIR:-'/mnt'}
 export DATE=${DATE:-"$(date +%Y%m%d)"}
+export PORTAGE_DIR=${PORTAGE_DIR:-"/var/tmp/catalyst/snapshots"}
 # profiles supported are as follows
 # default/linux/amd64/13.0
 # default/linux/amd64/13.0/no-multilib
@@ -35,7 +36,7 @@ export TEMP_IMAGE=${TEMP_IMAGE:-"gentoo-${PROFILE_SHORTNAME}.img"}
 export TARGET_IMAGE=${TARGET_IMAGE:-"/root/openstack-${PROFILE_SHORTNAME}-${DATE}.qcow2"}
 
 # create a raw partition and do stuff with it
-fallocate -l 2G "${TEMP_DIR}/${TEMP_IMAGE}"
+fallocate -l 4G "${TEMP_DIR}/${TEMP_IMAGE}"
 BLOCK_DEV=$(losetup -f --show "${TEMP_DIR}/${TEMP_IMAGE}")
 
 # Okay, we have the disk, let's prep it
@@ -56,7 +57,11 @@ mount ${BLOCK_DEV}p2 ${MOUNT_DIR}/${PROFILE_SHORTNAME}
 echo 'Expanding tarball'
 tar --xattrs -xjpf ${TARBALL} -C ${MOUNT_DIR}/${PROFILE_SHORTNAME}
 
+echo 'Adding in /usr/portage'
+tar --xattrs -xjpf ${PORTAGE_DIR}/portage-latest.tar.bz2 -C ${MOUNT_DIR}/${PROFILE_SHORTNAME}/usr
+
 # Install grub
+echo 'Installing grub'
 grub2-install ${BLOCK_DEV} --boot-directory ${MOUNT_DIR}/${PROFILE_SHORTNAME}/boot
 
 # Clean up
