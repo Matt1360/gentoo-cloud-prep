@@ -4,7 +4,7 @@
 # and we spray that stage4 all over it.  Then we rub some grub (0.97) all over
 # it to make it feel better, and then we box it up and ship it out.
 
-set -e -u -x
+set -e -u -x -o pipefail
 
 # Vars
 export TEMP_DIR=${TEMP_DIR:-'/root/tmp/catalyst/gentoo'}
@@ -41,39 +41,39 @@ BLOCK_DEV=$(losetup -f --show "${TEMP_DIR}/${TEMP_IMAGE}")
 
 # Okay, we have the disk, let's prep it
 echo 'Building disk'
-parted -s ${BLOCK_DEV} mklabel gpt
-parted -s --align=none ${BLOCK_DEV} mkpart bios_boot 0 2M
-parted -s --align=none ${BLOCK_DEV} mkpart primary 2M 100%
-parted -s ${BLOCK_DEV} set 1 boot on
-parted -s ${BLOCK_DEV} set 1 bios_grub on
-mkfs.ext4 -F ${BLOCK_DEV}p2
+parted -s "${BLOCK_DEV}" mklabel gpt
+parted -s --align=none "${BLOCK_DEV}" mkpart bios_boot 0 2M
+parted -s --align=none "${BLOCK_DEV}" mkpart primary 2M 100%
+parted -s "${BLOCK_DEV}" set 1 boot on
+parted -s "${BLOCK_DEV}" set 1 bios_grub on
+mkfs.ext4 -F "${BLOCK_DEV}p2"
 
 # Mount it
 echo 'Mounting disk'
-mkdir -p ${MOUNT_DIR}/${PROFILE_SHORTNAME}
-mount ${BLOCK_DEV}p2 ${MOUNT_DIR}/${PROFILE_SHORTNAME}
+mkdir -p "${MOUNT_DIR}/${PROFILE_SHORTNAME}"
+mount "${BLOCK_DEV}p2" "${MOUNT_DIR}/${PROFILE_SHORTNAME}"
 
 # Expand the stage
 echo 'Expanding tarball'
-tar --xattrs -xjpf ${TARBALL} -C ${MOUNT_DIR}/${PROFILE_SHORTNAME}
+tar --xattrs -xjpf "${TARBALL}" -C "${MOUNT_DIR}/${PROFILE_SHORTNAME}"
 
 echo 'Adding in /usr/portage'
-tar --xattrs -xjpf ${PORTAGE_DIR}/portage-latest.tar.bz2 -C ${MOUNT_DIR}/${PROFILE_SHORTNAME}/usr
+tar --xattrs -xjpf "${PORTAGE_DIR}/portage-latest.tar.bz2" -C "${MOUNT_DIR}/${PROFILE_SHORTNAME}/usr"
 
 # Install grub
 echo 'Installing grub'
-grub2-install ${BLOCK_DEV} --boot-directory ${MOUNT_DIR}/${PROFILE_SHORTNAME}/boot
+grub2-install "${BLOCK_DEV}" --boot-directory "${MOUNT_DIR}/${PROFILE_SHORTNAME}/boot"
 
 # Clean up
 echo 'Syncing; unmounting'
 sync
-umount ${MOUNT_DIR}/${PROFILE_SHORTNAME}
+umount "${MOUNT_DIR}/${PROFILE_SHORTNAME}"
 
 # get rid of block mapping
-losetup -d ${BLOCK_DEV}
+losetup -d "${BLOCK_DEV}"
 
 echo 'Converting raw image to qcow2'
-qemu-img convert -c -f raw -O qcow2 ${TEMP_DIR}/${TEMP_IMAGE} ${TARGET_IMAGE}
+qemu-img convert -c -f raw -O qcow2 "${TEMP_DIR}/${TEMP_IMAGE}" "${TARGET_IMAGE}"
 
 echo 'Cleaning up'
 rm "${TEMP_DIR}/${TEMP_IMAGE}"

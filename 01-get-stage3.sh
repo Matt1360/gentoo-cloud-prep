@@ -3,7 +3,7 @@
 # Note that I use this script to update all my current stages, and rootfs,
 # but this repo is more specifically for Gentoo, so have some Gentoo.
 
-set -e -u -x
+set -e -u -x -o pipefail
 
 # Vars
 export MIRROR=${MIRROR:-"http://gentoo.osuosl.org"}
@@ -18,7 +18,7 @@ export PORTAGE_DIR=${PORTAGE_DIR:-"/var/tmp/catalyst/snapshots"}
 # hardened/linux/amd64/no-multilib/selinux (eventually)
 export PROFILE=${PROFILE:-"default/linux/amd64/13.0"}
 
-mkdir -p ${OUTDIR}
+mkdir -p "${OUTDIR}"
 
 if [[ "${PROFILE}" == "default/linux/amd64/13.0" ]]; then
   STAGE3_NAME="stage3-amd64-current.tar.bz2"

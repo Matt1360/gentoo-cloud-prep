@@ -8,7 +8,7 @@
 # your own scenario.  I have a VM that poops out images for me, and these
 # are the fields I use.
 
-set -e -u -x
+set -e -u -x -o pipefail
 
 # Vars
 export DATE=${DATE:-"$(date +%Y%m%d)"}
