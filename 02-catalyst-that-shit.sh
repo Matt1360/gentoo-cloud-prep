@@ -66,8 +66,8 @@ snapshot: latest
 version_stamp: ${DATE}
 
 # Stage 4 stuff
-stage4/use: bash-completion bzip2 idm urandom ipv6 mmx sse sse2 abi_x86_32 abi_x86_64
-stage4/packages: eix vim bc cloud-init syslog-ng logrotate vixie-cron dhcpcd sudo gentoolkit iproute2 grub:2 lsb-release gptfdisk dmidecode acpid
+stage4/use: abi_x86_32 abi_x86_64 bash-completion bzip2 idm ipv6 mmx sse sse2 urandom
+stage4/packages: app-admin/logrotate app-admin/sudo app-admin/syslog-ng app-editors/vim app-emulation/cloud-init app-portage/eix app-portage/gentoolkit net-misc/dhcpcd sys-apps/dmidecode sys-apps/gptfdisk sys-apps/iproute2 sys-apps/lsb-release sys-boot/grub:2 sys-devel/bc sys-power/acpid sys-process/cronie
 stage4/fsscript: files/prep.sh
 stage4/root_overlay: root-overlay
 stage4/rcadd: syslog-ng|default sshd|default vixie-cron|default cloud-config|default cloud-init-local|default cloud-init|default cloud-final|default netmount|default acpid|default dhcpcd|default net.lo|default
