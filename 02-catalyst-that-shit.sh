@@ -74,7 +74,6 @@ stage4/rcadd: syslog-ng|default sshd|default cronie|default cloud-config|default
 
 boot/kernel: gentoo
 boot/kernel/gentoo/sources: ${KERNEL_SOURCES}
-boot/kernel/gentoo/config: files/kernel-${PROFILE_SHORTNAME}.config
 boot/kernel/gentoo/extraversion: openstack
 boot/kernel/gentoo/gk_kernargs: --all-ramdisk-modules
 EOF
