@@ -70,7 +70,7 @@ stage4/use: bash-completion bzip2 idm ipv6 mmx sse sse2 urandom
 stage4/packages: app-admin/logrotate app-admin/sudo app-admin/syslog-ng app-editors/vim app-emulation/cloud-init app-portage/eix app-portage/gentoolkit net-misc/dhcpcd sys-apps/dmidecode sys-apps/gptfdisk sys-apps/iproute2 sys-apps/lsb-release sys-boot/grub:2 sys-devel/bc sys-power/acpid sys-process/cronie
 stage4/fsscript: files/prep.sh
 stage4/root_overlay: root-overlay
-stage4/rcadd: syslog-ng|default sshd|default vixie-cron|default cloud-config|default cloud-init-local|default cloud-init|default cloud-final|default netmount|default acpid|default dhcpcd|default net.lo|default
+stage4/rcadd: syslog-ng|default sshd|default cronie|default cloud-config|default cloud-init-local|default cloud-init|default cloud-final|default netmount|default acpid|default dhcpcd|default net.lo|default
 
 boot/kernel: gentoo
 boot/kernel/gentoo/sources: ${KERNEL_SOURCES}
