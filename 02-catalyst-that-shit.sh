@@ -66,7 +66,7 @@ snapshot: latest
 version_stamp: ${DATE}
 
 # Stage 4 stuff
-stage4/use: bash-completion bzip2 idm ipv6 mmx sse sse2 urandom
+stage4/use: bash-completion bzip2 idm ipv6 mmx sse sse2 urandom -nls -fortran
 stage4/packages: app-admin/logrotate app-admin/sudo app-admin/syslog-ng app-editors/vim app-emulation/cloud-init app-portage/eix app-portage/gentoolkit net-misc/dhcpcd sys-apps/dmidecode sys-apps/gptfdisk sys-apps/iproute2 sys-apps/lsb-release sys-boot/grub:2 sys-devel/bc sys-power/acpid sys-process/cronie
 stage4/fsscript: files/prep.sh
 stage4/root_overlay: root-overlay
@@ -74,8 +74,39 @@ stage4/rcadd: syslog-ng|default sshd|default cronie|default cloud-config|default
 
 boot/kernel: gentoo
 boot/kernel/gentoo/sources: ${KERNEL_SOURCES}
+boot/kernel/gentoo/config: files/kernel-${PROFILE_SHORTNAME}.config
 boot/kernel/gentoo/extraversion: openstack
 boot/kernel/gentoo/gk_kernargs: --all-ramdisk-modules
+
+# all of the cleanup...
+stage4/unmerge:
+  sys-kernel/genkernel
+  sys-kernel/gentoo-sources
+
+stage4/empty:
+  /root/.ccache
+  /tmp
+  /usr/portage/distfiles
+  /usr/src
+  /var/cache/edb/dep
+  /var/cache/genkernel
+  /var/empty
+  /var/run
+  /var/state
+  /var/tmp
+
+stage4/rm:
+  /etc/*-
+  /etc/*.old
+  /etc/ssh/ssh_host_*
+  /root/.*history
+  /root/.lesshst
+  /root/.ssh/known_hosts
+  /root/.viminfo
+  # Remove any generated stuff by genkernel
+  /usr/share/genkernel
+  # This is 3MB of crap for each copy
+  /usr/lib64/python*/site-packages/gentoolkit/test/eclean/testdistfiles.tar.gz
 EOF
 
 # Run catalyst
