@@ -36,7 +36,7 @@ export TEMP_IMAGE=${TEMP_IMAGE:-"gentoo-${PROFILE_SHORTNAME}.img"}
 export TARGET_IMAGE=${TARGET_IMAGE:-"/root/openstack-${PROFILE_SHORTNAME}-${DATE}.qcow2"}
 
 # create a raw partition and do stuff with it
-fallocate -l 5G "${TEMP_DIR}/${TEMP_IMAGE}"
+fallocate -l 1G "${TEMP_DIR}/${TEMP_IMAGE}"
 BLOCK_DEV=$(losetup -f --show "${TEMP_DIR}/${TEMP_IMAGE}")
 
 # Okay, we have the disk, let's prep it
@@ -57,8 +57,8 @@ mount "${BLOCK_DEV}p2" "${MOUNT_DIR}/${PROFILE_SHORTNAME}"
 echo 'Expanding tarball'
 tar --xattrs -xjpf "${TARBALL}" -C "${MOUNT_DIR}/${PROFILE_SHORTNAME}"
 
-echo 'Adding in /usr/portage'
-tar --xattrs -xjpf "${PORTAGE_DIR}/portage-latest.tar.bz2" -C "${MOUNT_DIR}/${PROFILE_SHORTNAME}/usr"
+#echo 'Adding in /usr/portage'
+#tar --xattrs -xjpf "${PORTAGE_DIR}/portage-latest.tar.bz2" -C "${MOUNT_DIR}/${PROFILE_SHORTNAME}/usr"
 
 # Install grub
 echo 'Installing grub'
