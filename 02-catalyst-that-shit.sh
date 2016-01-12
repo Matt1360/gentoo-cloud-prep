@@ -13,7 +13,7 @@ set -e -u -x -o pipefail
 # Vars
 export DATE=${DATE:-"$(date +%Y%m%d)"}
 export OUTDIR=${OUTDIR:-"/root/tmp/catalyst/gentoo"}
-export GIT_BASE_DIR=${GIT_BASE_DIR:-$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )}
+export GIT_BASE_DIR=${GIT_BASE_DIR:-$( cd "$( dirname ${BASH_SOURCE[0]} )" && pwd )}
 # profiles supported are as follows
 # default/linux/amd64/13.0
 # default/linux/amd64/13.0/no-multilib
