@@ -47,6 +47,7 @@ parted -s --align=none "${BLOCK_DEV}" mkpart primary 2M 100%
 parted -s "${BLOCK_DEV}" set 1 boot on
 parted -s "${BLOCK_DEV}" set 1 bios_grub on
 mkfs.ext4 -F "${BLOCK_DEV}p2"
+e2label "${BLOCK_DEV}p2" cloudimg-rootfs
 
 # Mount it
 echo 'Mounting disk'
