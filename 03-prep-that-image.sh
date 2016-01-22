@@ -63,7 +63,7 @@ tar --xattrs -xjpf "${TARBALL}" -C "${MOUNT_DIR}/${PROFILE_SHORTNAME}"
 
 # Install grub
 echo 'Installing grub'
-grub2-install "${BLOCK_DEV}" --boot-directory "${MOUNT_DIR}/${PROFILE_SHORTNAME}/boot"
+grub2-install "${BLOCK_DEV}" --root-directory "${MOUNT_DIR}/${PROFILE_SHORTNAME}/"
 
 # Clean up
 echo 'Syncing; unmounting'
