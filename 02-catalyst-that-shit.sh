@@ -32,6 +32,10 @@ elif [[ "${PROFILE}" == "default/linux/amd64/13.0/no-multilib" ]]; then
   PROFILE_SHORTNAME="amd64-default-nomultilib"
   SOURCE_SUBPATH="stage3-amd64-nomultilib-current"
   KERNEL_SOURCES="gentoo-sources"
+elif [[ "${PROFILE}" == "hardened/linux/musl/amd64" ]]; then
+  PROFILE_SHORTNAME="amd64-hardened-musl"
+  SOURCE_SUBPATH="stage3-amd64-hardened-musl-current"
+  KERNEL_SOURCES="hardened-sources"
 elif [[ "${PROFILE}" == "hardened/linux/amd64" ]]; then
   PROFILE_SHORTNAME="amd64-hardened"
   SOURCE_SUBPATH="stage3-amd64-hardened-current"
@@ -60,6 +64,7 @@ cflags: -O2 -pipe -march=core2
 pkgcache_path: /tmp/packages-${PROFILE_SHORTNAME}
 kerncache_path: /tmp/kernel-${PROFILE_SHORTNAME}
 portage_confdir: ${GIT_BASE_DIR}/portage_overlay
+portage_overlay: /var/lib/layman/musl
 
 # Probably best made as parameters
 snapshot: latest
@@ -82,6 +87,7 @@ boot/kernel/gentoo/gk_kernargs: --all-ramdisk-modules
 stage4/unmerge:
   sys-kernel/genkernel
   sys-kernel/gentoo-sources
+  sys-kernel/hardened-sources
 
 stage4/empty:
   /root/.ccache
