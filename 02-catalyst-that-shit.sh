@@ -64,7 +64,7 @@ cflags: -O2 -pipe -march=core2
 pkgcache_path: /tmp/packages-${PROFILE_SHORTNAME}
 kerncache_path: /tmp/kernel-${PROFILE_SHORTNAME}
 portage_confdir: ${GIT_BASE_DIR}/portage_overlay
-portage_overlay: ~/overlays/musl
+portage_overlay: /opt/overlays/musl
 
 # Probably best made as parameters
 snapshot: current
@@ -72,10 +72,10 @@ version_stamp: ${DATE}
 
 # Stage 4 stuff
 stage4/use: bash-completion bzip2 idm ipv6 mmx sse sse2 urandom -nls -fortran
-stage4/packages: app-admin/logrotate app-admin/sudo app-admin/syslog-ng app-editors/vim app-emulation/cloud-init app-portage/eix app-portage/gentoolkit net-misc/dhcpcd sys-apps/dmidecode sys-apps/gptfdisk sys-apps/iproute2 sys-apps/lsb-release sys-boot/grub:2 sys-devel/bc sys-power/acpid sys-process/cronie
+stage4/packages: app-admin/logrotate app-admin/sudo app-admin/syslog-ng app-editors/vim app-portage/eix app-portage/gentoolkit net-misc/dhcpcd sys-apps/dmidecode sys-apps/gptfdisk sys-apps/iproute2 sys-apps/lsb-release sys-boot/grub:2 sys-devel/bc sys-power/acpid sys-process/cronie
 stage4/fsscript: files/prep.sh
 stage4/root_overlay: root-overlay
-stage4/rcadd: syslog-ng|default sshd|default cronie|default cloud-config|default cloud-init-local|default cloud-init|default cloud-final|default netmount|default acpid|default dhcpcd|default net.lo|default
+stage4/rcadd: syslog-ng|default sshd|default cronie|default netmount|default acpid|default dhcpcd|default net.lo|default
 
 boot/kernel: gentoo
 boot/kernel/gentoo/sources: ${KERNEL_SOURCES}
