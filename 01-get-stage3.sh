@@ -79,24 +79,24 @@ fi
 
 # get the latest portage
 PORTAGE_LIVE_MD5=$(curl -s "${MIRROR}/snapshots/portage-latest.tar.bz2.md5sum" | awk '/portage-latest/ {print $1}')
-OUR_MD5=$(md5sum "${PORTAGE_DIR}/portage-latest.tar.bz2" | awk {'print $1'})
+OUR_MD5=$(md5sum "${PORTAGE_DIR}/portage-current.tar.bz2" | awk {'print $1'})
 if [[ "${PORTAGE_LIVE_MD5}" != "${OUR_MD5}" ]]; then
   echo 'downloading new portage tarball'
   if [[ ! -d "${PORTAGE_DIR}" ]]; then
     mkdir -p "${PORTAGE_DIR}"
   fi
-  curl -s "${MIRROR}/snapshots/portage-latest.tar.bz2" -o "${PORTAGE_DIR}/portage-latest.tar.bz2"
-  curl -s "${MIRROR}/snapshots/portage-latest.tar.bz2.gpgsig" -o "${PORTAGE_DIR}/portage-latest.tar.bz2.gpgsig"
-  gkeys verify -F "${PORTAGE_DIR}/portage-latest.tar.bz2"
+  curl -s "${MIRROR}/snapshots/portage-latest.tar.bz2" -o "${PORTAGE_DIR}/portage-current.tar.bz2"
+  curl -s "${MIRROR}/snapshots/portage-latest.tar.bz2.gpgsig" -o "${PORTAGE_DIR}/portage-current.tar.bz2.gpgsig"
+  gkeys verify -F "${PORTAGE_DIR}/portage-current.tar.bz2"
   STATUS=$?
   if [[ ${STATUS} != 0 ]]; then
     echo 'tarball did not verify, removing badness'
-    rm "${PORTAGE_DIR}/portage-latest.tar.bz2"
-    rm "${PORTAGE_DIR}/portage-latest.tar.bz2.gpgsig"
+    rm "${PORTAGE_DIR}/portage-current.tar.bz2"
+    rm "${PORTAGE_DIR}/portage-current.tar.bz2.gpgsig"
     exit 1
   elif [[ ${STATUS} == 0 ]]; then
     echo 'tarball verified'
-    rm "${PORTAGE_DIR}/portage-latest.tar.bz2.gpgsig"
+    rm "${PORTAGE_DIR}/portage-current.tar.bz2.gpgsig"
   fi
 else
   echo 'portage tarball is up to date'

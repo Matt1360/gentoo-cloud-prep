@@ -57,6 +57,9 @@ USE="-build" emerge --verbose=n --depclean
 USE="-build" emerge -v --usepkg=n @preserved-rebuild
 etc-update --automode -5
 
+# for musl
+touch /etc/ld.so.conf /etc/ld.so.cache
+
 # Clean up portage
 emerge --verbose=n --depclean
 emaint all -f

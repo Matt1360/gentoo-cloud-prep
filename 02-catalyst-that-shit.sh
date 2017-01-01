@@ -34,7 +34,7 @@ elif [[ "${PROFILE}" == "default/linux/amd64/13.0/no-multilib" ]]; then
   KERNEL_SOURCES="gentoo-sources"
 elif [[ "${PROFILE}" == "hardened/linux/musl/amd64" ]]; then
   PROFILE_SHORTNAME="amd64-hardened-musl"
-  SOURCE_SUBPATH="stage3-amd64-hardened-musl-current"
+  SOURCE_SUBPATH="musl/hardened/amd64/stage3-amd64-musl-hardened"
   KERNEL_SOURCES="hardened-sources"
 elif [[ "${PROFILE}" == "hardened/linux/amd64" ]]; then
   PROFILE_SHORTNAME="amd64-hardened"
@@ -64,10 +64,10 @@ cflags: -O2 -pipe -march=core2
 pkgcache_path: /tmp/packages-${PROFILE_SHORTNAME}
 kerncache_path: /tmp/kernel-${PROFILE_SHORTNAME}
 portage_confdir: ${GIT_BASE_DIR}/portage_overlay
-portage_overlay: /var/lib/layman/musl
+portage_overlay: ~/overlays/musl
 
 # Probably best made as parameters
-snapshot: latest
+snapshot: current
 version_stamp: ${DATE}
 
 # Stage 4 stuff
@@ -81,7 +81,7 @@ boot/kernel: gentoo
 boot/kernel/gentoo/sources: ${KERNEL_SOURCES}
 boot/kernel/gentoo/config: files/kernel-${PROFILE_SHORTNAME}.config
 boot/kernel/gentoo/extraversion: openstack
-boot/kernel/gentoo/gk_kernargs: --all-ramdisk-modules
+boot/kernel/gentoo/gk_kernargs: --all-ramdisk-modules --makeopts=-j6
 
 # all of the cleanup...
 stage4/unmerge:
