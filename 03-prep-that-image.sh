@@ -1,64 +1,80 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
 # Okay, so here's some real meat.  We take a drive (as 02 said, I use a VM),
 # and we spray that stage4 all over it.  Then we rub some grub (0.97) all over
 # it to make it feel better, and then we box it up and ship it out.
 
-##
-## Vars
-##
-TARGET_DISK=vdd
-TEMP_DIR=/image-prep/gentoo
-TARGET_IMAGE=/var/www/reenigne-gentoo-`date +%Y-%m-%d`
-MOUNT_DIR=/mnt
-ORIG_DIR=`pwd`
-TARBALL=/image-prep/gentoo/stage4.tar.bz2
+set -e -u -x -o pipefail
+
+# Vars
+export TEMP_DIR=${TEMP_DIR:-'/root/tmp/catalyst/gentoo'}
+export MOUNT_DIR=${MOUNT_DIR:-'/mnt'}
+export DATE=${DATE:-"$(date +%Y%m%d)"}
+export PORTAGE_DIR=${PORTAGE_DIR:-"/var/tmp/catalyst/snapshots"}
+# profiles supported are as follows
+# default/linux/amd64/13.0
+# default/linux/amd64/13.0/no-multilib
+# hardened/linux/amd64
+# hardened/linux/amd64/no-multilib
+# hardened/linux/amd64/selinux (eventually)
+# hardened/linux/amd64/no-multilib/selinux (eventually)
+export PROFILE=${PROFILE:-"default/linux/amd64/13.0"}
+if [[ "${PROFILE}" == "default/linux/amd64/13.0" ]]; then
+  PROFILE_SHORTNAME="amd64-default"
+elif [[ "${PROFILE}" == "default/linux/amd64/13.0/no-multilib" ]]; then
+  PROFILE_SHORTNAME="amd64-default-nomultilib"
+elif [[ "${PROFILE}" == "hardened/linux/amd64" ]]; then
+  PROFILE_SHORTNAME="amd64-hardened"
+elif [[ "${PROFILE}" == "hardened/linux/amd64/no-multilib" ]]; then
+  PROFILE_SHORTNAME="amd64-hardened-nomultilib"
+else
+  echo 'invalid profile, exiting'
+  exit 1
+fi
+export TARBALL=${TARBALL:-"/root/tmp/catalyst/gentoo/stage4-${PROFILE_SHORTNAME}-${DATE}.tar.bz2"}
+export TEMP_IMAGE=${TEMP_IMAGE:-"gentoo-${PROFILE_SHORTNAME}.img"}
+export TARGET_IMAGE=${TARGET_IMAGE:-"/root/openstack-${PROFILE_SHORTNAME}-${DATE}.qcow2"}
+
+# create a raw partition and do stuff with it
+fallocate -l 1G "${TEMP_DIR}/${TEMP_IMAGE}"
+BLOCK_DEV=$(losetup -f --show "${TEMP_DIR}/${TEMP_IMAGE}")
 
 # Okay, we have the disk, let's prep it
 echo 'Building disk'
-parted -s /dev/$TARGET_DISK mklabel msdos
-parted -s --align=none /dev/$TARGET_DISK mkpart primary 2048s 100%
-parted -s /dev/$TARGET_DISK set 1 boot on
-mkfs.ext4 -F /dev/${TARGET_DISK}1
+parted -s "${BLOCK_DEV}" mklabel gpt
+parted -s --align=none "${BLOCK_DEV}" mkpart bios_boot 0 2M
+parted -s --align=none "${BLOCK_DEV}" mkpart primary 2M 100%
+parted -s "${BLOCK_DEV}" set 1 boot on
+parted -s "${BLOCK_DEV}" set 1 bios_grub on
+mkfs.ext4 -F "${BLOCK_DEV}p2"
+e2label "${BLOCK_DEV}p2" cloudimg-rootfs
 
 # Mount it
 echo 'Mounting disk'
-mount /dev/${TARGET_DISK}1 $MOUNT_DIR
-
-# Let's localize commands now
-cd $MOUNT_DIR
+mkdir -p "${MOUNT_DIR}/${PROFILE_SHORTNAME}"
+mount "${BLOCK_DEV}p2" "${MOUNT_DIR}/${PROFILE_SHORTNAME}"
 
 # Expand the stage
 echo 'Expanding tarball'
-tar xjpf $TARBALL -C ./
+tar --xattrs -xjpf "${TARBALL}" -C "${MOUNT_DIR}/${PROFILE_SHORTNAME}"
 
-# Throw in a resolv.conf (because we download portage next)
-cp /etc/resolv.conf etc/resolv.conf
+#echo 'Adding in /usr/portage'
+#tar --xattrs -xjpf "${PORTAGE_DIR}/portage-latest.tar.bz2" -C "${MOUNT_DIR}/${PROFILE_SHORTNAME}/usr"
 
-# Catalyst doesn't give us portage, so that's cool
-echo 'Downloading portage'
-curl -s http://mirror.reenigne.net/gentoo/snapshots/portage-latest.tar.bz2 > portage-latest.tar.bz2
-echo 'Expanding portage'
-tar xjf portage-latest.tar.bz2 -C usr/
-rm portage-latest.tar.bz2
+# Install grub
+echo 'Installing grub'
+grub2-install "${BLOCK_DEV}" --root-directory "${MOUNT_DIR}/${PROFILE_SHORTNAME}/"
 
 # Clean up
 echo 'Syncing; unmounting'
 sync
-sleep 5; # To unmount, just in case.  5 seconds is nothing next to the dd below
-cd $ORIG_DIR
-umount $MOUNT_DIR
+umount "${MOUNT_DIR}/${PROFILE_SHORTNAME}"
 
-# Install grub
-echo 'Installing grub'
-printf "device (hd0) /dev/${TARGET_DISK}\nroot (hd0,0)\nsetup (hd0)\nquit\n" | grub --batch
+# get rid of block mapping
+losetup -d "${BLOCK_DEV}"
 
-# Now it's unmounted, but we need to make an image!
-echo 'dding image'
-dd if=/dev/$TARGET_DISK of=${TEMP_DIR}/temp.raw
-
-echo 'Converting dd image to qcow2'
-qemu-img convert -c -f raw -O qcow2 ${TEMP_DIR}/temp.raw ${TARGET_IMAGE}.qcow2
+echo 'Converting raw image to qcow2'
+qemu-img convert -c -f raw -O qcow2 "${TEMP_DIR}/${TEMP_IMAGE}" "${TARGET_IMAGE}"
 
 echo 'Cleaning up'
-rm ${TEMP_DIR}/temp.raw
+rm "${TEMP_DIR}/${TEMP_IMAGE}"

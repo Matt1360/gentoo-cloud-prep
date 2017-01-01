@@ -2,7 +2,7 @@
 
 Some scripts to help with the following:
 
-- Get the latest stage3 from a mirror
+- Get the latest stage3 and portage snapshot from a mirror
 - Catalyst that shit up into a stage4 for your own voodoo
 - Prepare a physical disk based on that stage4, throw grub on it, generate a qcow2 image
 
@@ -10,13 +10,22 @@ Some scripts to help with the following:
 
 First we need some packages.
 
-`# emerge catalyst qemu`
+`# emerge catalyst qemu parted app-crypt/gkeys grub:2`
 
 Now we can run `catalyst` and `qemu-img`.  If you only need the stage4, you can omit `qemu`.
 
-Next you'll notice the scripts.  They each have variables you'll probably want to change, or prep your system for.  Do one of those two things, or well, expect tears.
-
 Run the scripts in order, and you'll have a shiny new set of files, depending on what you wanted.
+
+set the profile you want, valid ones are as follows
+
+- default/linux/amd64/13.0
+- default/linux/amd64/13.0/no-multilib
+- hardened/linux/amd64
+- hardened/linux/amd64/no-multilib
+
+`export PROFILE="default/linux/amd64/13.0"`
+
+Of note to hardened users is that this uses catalyst, which uses chroots, so you need to allow grsec things for chroots
 
 ### Quick Overview: What do?
 
